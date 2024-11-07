@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Login</title>
+
+    <!-- Google Font import for Press Start 2P (techno pixelated font) -->
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
+    <style>
+        /* Font style */
+        .press-start-2p-regular {
+            font-family: "Press Start 2P", system-ui;
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        /* Styling for the body */
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            overflow: hidden;
+            background: black;
+            position: relative;
+        }
+
+        /* Title styling */
+        h1 {
+            font-size: 60px;
+            color: yellow;
+            text-align: center;
+            position: absolute;
+            top: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: glow 1.5s infinite alternate;
+            font-family: 'Press Start 2P', cursive;
+            letter-spacing: 10px;
+        }
+
+        /* Glowing effect for title */
+        @keyframes glow {
+            0% {
+                text-shadow: 0 0 10px yellow, 0 0 20px yellow, 0 0 30px yellow;
+            }
+            100% {
+                text-shadow: 0 0 20px #ffcc00, 0 0 40px #ffcc00, 0 0 60px #ffcc00;
+            }
+        }
+
+        /* Form container */
+        .login-form {
+            text-align: center;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Press Start 2P', cursive;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        /* Input and Select styles */
+        .login-form input, .login-form select {
+            font-size: 18px;
+            padding: 15px;
+            margin: 0;
+            border: none;
+            background-color: black;
+            color: yellow;
+            text-align: center;
+            width: 400px;
+            font-family: 'Press Start 2P', cursive;
+            outline: none;
+            caret-color: yellow;
+        }
+
+        /* Placeholder text color */
+        .login-form input::placeholder {
+            color: yellow;
+            opacity: 0.8;
+        }
+
+        /* Dropdown arrow customization */
+        .login-form select {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" fill="yellow" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-color: black;
+            color: yellow;
+        }
+
+        /* Button style and glowing effect */
+        .login-form button {
+            background: transparent;
+            border: none;
+            color: yellow;
+            font-size: 30px;
+            cursor: pointer;
+            font-family: 'Press Start 2P', cursive;
+            letter-spacing: 5px;
+            outline: none;
+            animation: glow 1.5s infinite alternate;
+            text-shadow: 0 0 20px yellow;
+        }
+
+        .login-form button:hover {
+            text-shadow: 0 0 30px yellow, 0 0 50px yellow, 0 0 70px yellow;
+        }
+
+        /* Error message styling */
+        .error-message {
+            color: red;
+            font-size: 18px;
+            font-family: 'Press Start 2P', cursive;
+            display: none;
+        }
+
+        /* Starry animated background */
+        .starry-bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: url('https://cdn.pixabay.com/animation/2024/07/23/19/52/19-52-56-478_512.gif') repeat top center;
+            z-index: -1;
+        }
+
+        /* Floating elements animation */
+        .floating {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            animation: float 5s infinite ease-in-out;
+            opacity: 0.8;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0); }
+        }
+
+        /* Memory card images */
+        .card {
+            background: url('https://example.com/memory_card.png');
+            top: 30%;
+            left: 20%;
+        }
+
+        /* Soldier images */
+        .soldier {
+            background: url('https://example.com/soldier.png');
+            top: 60%;
+            left: 70%;
+        }
+    </style>
+</head>
+<body>
+    <div class="starry-bg"></div>
+    <h1>USER LOGIN</h1>
+
+    <!-- Floating elements (for visual flair) -->
+    <div class="floating card"></div>
+    <div class="floating soldier"></div>
+
+    <!-- Login form -->
+    <div class="login-form">
+        <input type="text" id="username" name="username" placeholder="Enter your Username">
+        <input type="number" id="age" name="age" placeholder="Enter your Age">
+        <!-- New dropdown for difficulty selection -->
+        <select id="difficulty" name="difficulty">
+            <option value="" disabled selected>Select Difficulty</option>
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="difficult">Difficult</option>
+        </select>
+        <button type="submit" id="submit" onclick="validateForm()">Submit</button>
+        <div id="error-message" class="error-message">Please fill in all fields!</div> <!-- Error message -->
+    </div>
+
+    <script>
+        // Form validation function
+        function validateForm() {
+            var username = document.getElementById('username').value;
+            var age = document.getElementById('age').value;
+            var difficulty = document.getElementById('difficulty').value;
+            var errorMessage = document.getElementById('error-message');
+            
+            // Check if any field is empty
+            if (username === '' || age === '' || difficulty === '') {
+                errorMessage.style.display = 'block'; // Show error message
+            } else {
+                errorMessage.style.display = 'none'; // Hide error message
+                document.getElementById("submit").onclick = function () {
+                window.location.href = "index.html";
+            };
+            }
+        }
+    </script>
+</body>
+</html>

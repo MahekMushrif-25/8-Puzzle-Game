@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>4x4 Sliding Puzzle</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        #puzzle {
+            display: grid;
+            grid-template-columns: repeat(4, 100px);
+            grid-template-rows: repeat(4, 100px);
+            gap: 5px;
+        }
+
+        .tile {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+
+        .tile.empty {
+            background-color: #f0f0f0;
+            cursor: default;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>4x4 Sliding Puzzle</h1>
+        <div id="puzzle"></div>
+        <button id="solveButton">Solve</button>
+        <div id="message"></div>
+    </div>
+
+    <script>
+        let puzzle = [
+            [1, 2, 3, 4],
+            [5, 6, 7, 8],
+            [9, 10, 11, 12],
+            [13, 14, 15, null]
+        ];
+
+        let emptyTile = { x: 3, y: 3 }; // Empty tile position
+        let isSolving = false;
+
+        function initPuzzle() {
+            const puzzleContainer = document.getElementById('puzzle');
+            puzzleContainer.innerHTML = '';
+
+            for (let i = 0; i < 4; i++) {
+                for (let j = 0; j < 4; j++) {
+                    const tile = document.createElement('div');
+                    tile.classList.add('tile');
+                    tile.textContent = puzzle[i][j] !== null ? puzzle[i][j] : '';
+                    tile.dataset.x = i;
+                    tile.dataset.y = j;
+
+                    if (puzzle[i][j] === null) {
+                        tile.classList.add('empty');
+                    } else {
+                        tile.addEventListener('click', () => moveTile(i, j));
+                    }
+
+                    puzzleContainer.appendChild(tile);
+                }
+            }
+        }
+
+        function moveTile(x, y) {
+            if (isSolving) return;
+
+            const dx = Math.abs(emptyTile.x - x);
+            const dy = Math.abs(emptyTile.y - y);
+
+            // Check if the move is valid (tile is adjacent to the empty space)
+            if ((dx === 1 && dy === 0) || (dx === 0 && dy === 1)) {
+                puzzle[emptyTile.x][emptyTile.y] = puzzle[x][y];
+                puzzle[x][y] = null;
+                emptyTile = { x, y };
+                initPuzzle();
+            }
+        }
+
+        document.getElementById('solveButton').addEventListener('click', () => {
+            if (!isSolving) {
+                isSolving = true;
+                aStarSolve();
+            }
+        });
+
+        async function aStarSolve() {
+            const solutionSteps = await aStarAlgorithm(puzzle);
+            const movesCount = solutionSteps.length - 1; // Total moves to solve
+            document.getElementById('message').textContent = `Solving... Total Moves: ${movesCount}`;
+            
+            for (const step of solutionSteps) {
+                await new Promise(resolve => setTimeout(resolve, 1000)); // wait for 1 second
+                puzzle = step;
+                initPuzzle();
+            }
+            document.getElementById('message').textContent = "Congratulations! Puzzle solved!";
+            isSolving = false;
+        }
+
+        async function aStarAlgorithm(initialState) {
+            const targetState = [
+                [1, 2, 3, 4],
+                [5, 6, 7, 8],
+                [9, 10, 11, 12],
+                [13, 14, 15, null]
+            ];
+
+            const moves = [
+                { x: -1, y: 0 }, // Up
+                { x: 1, y: 0 },  // Down
+                { x: 0, y: -1 }, // Left
+                { x: 0, y: 1 }   // Right
+            ];
+
+            function heuristic(state) {
+                let distance = 0;
+                for (let i = 0; i < 4; i++) {
+                    for (let j = 0; j < 4; j++) {
+                        if (state[i][j] !== null) {
+                            const value = state[i][j];
+                            const targetX = Math.floor((value - 1) / 4);
+                            const targetY = (value - 1) % 4;
+                            distance += Math.abs(targetX - i) + Math.abs(targetY - j);
+                        }
+                    }
+                }
+                return distance;
+            }
+
+            function isEqual(state1, state2) {
+                for (let i = 0; i < 4; i++) {
+                    for (let j = 0; j < 4; j++) {
+                        if (state1[i][j] !== state2[i][j]) return false;
+                    }
+                }
+                return true;
+            }
+
+            let openList = [{ state: initialState, emptyTile, path: [initialState] }];
+            let closedList = new Set();
+
+            while (openList.length > 0) {
+                openList.sort((a, b) => {
+                    const costA = a.path.length + heuristic(a.state);
+                    const costB = b.path.length + heuristic(b.state);
+                    return costA - costB;
+                });
+
+                const current = openList.shift();
+
+                if (isEqual(current.state, targetState)) {
+                    return current.path; // Return the sequence of states
+                }
+
+                closedList.add(JSON.stringify(current.state));
+
+                for (const move of moves) {
+                    const newEmptyTile = {
+                        x: current.emptyTile.x + move.x,
+                        y: current.emptyTile.y + move.y
+                    };
+
+                    if (newEmptyTile.x >= 0 && newEmptyTile.x < 4 && newEmptyTile.y >= 0 && newEmptyTile.y < 4) {
+                        const newState = JSON.parse(JSON.stringify(current.state));
+                        newState[current.emptyTile.x][current.emptyTile.y] = newState[newEmptyTile.x][newEmptyTile.y];
+                        newState[newEmptyTile.x][newEmptyTile.y] = null;
+
+                        if (!closedList.has(JSON.stringify(newState))) {
+                            openList.push({ state: newState, emptyTile: newEmptyTile, path: [...current.path, newState] });
+                        }
+                    }
+                }
+            }
+
+            return []; // No solution found
+        }
+
+        initPuzzle();
+    </script>
+</body>
+</html>

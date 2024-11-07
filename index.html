@@ -1,17 +1,105 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Slide Puzzle</title>
-        <link rel="stylesheet" href="puzzle.css">
-        <script src="puzzle.js"></script>
-    </head>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Puzzle Shift</title>
 
-    <body>
-        <img id="title" src="./logo.png">
-        <div id="board">
-        </div>
-        <h1>Turns: <span id="turns">0</span></h1>
-    </body>
+    <!-- Google Font import for Press Start 2P -->
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
+    <style>
+        /* Body styling with starry background */
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            background: black url('https://cdn.pixabay.com/animation/2024/07/23/19/52/19-52-56-478_512.gif') repeat top center;
+            font-family: 'Press Start 2P', cursive;
+            color: yellow;
+        }
+
+        /* Main website title styling */
+        .main-title {
+            font-size: 40px;
+            color: #FFFF00;
+            text-align: center;
+            margin-top: 50px; /* Adjusts spacing from top */
+            letter-spacing: 5px;
+            animation: glow 1.5s infinite alternate;
+        }
+
+        /* Sub-title styling */
+        .sub-title {
+            font-size: 32px;
+            color: #FFFF00; /* Yellow arcade color */
+            text-align: center;
+            margin-top: 100px;
+            margin-bottom: 100px; /* Adjusts spacing between subtitle and buttons */
+            letter-spacing: 3px;
+            animation: glow 1.5s infinite alternate;
+        }
+
+        /* Glowing effect for title and subtitle */
+        @keyframes glow {
+            0% {
+                text-shadow: 0 0 10px #FFFF00, 0 0 20px #FFFF00, 0 0 30px #FFFF00;
+            }
+            100% {
+                text-shadow: 0 0 20px #FFD700, 0 0 40px #FFD700, 0 0 60px #FFD700;
+            }
+        }
+
+        /* Container for buttons */
+        .button-container {
+            display: flex;
+            gap: 20px;
+        }
+
+        /* Image button styling */
+        .image-button {
+            width: 120px; /* Set a fixed width */
+            height: 120px; /* Set a fixed height for consistent sizing */
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            background-color: transparent;
+            border: none;
+            outline: none;
+            background-size: cover;
+            background-position: center;
+        }
+
+        /* Hover effect for image buttons */
+        .image-button:hover {
+            transform: translateY(-10px); /* Rising effect on hover */
+        }
+    </style>
+</head>
+<body>
+    <!-- Main Title -->
+    <h1 class="main-title">Pixel Shift</h1>
+
+    <!-- Subtitle for selecting image set -->
+    <h2 class="sub-title">Select Image Set for 8 Puzzle Game</h2>
+
+    <!-- Horizontal button container -->
+    <div class="button-container">
+        <button class="image-button" onclick="startGame('set1')" style="background-image: url('mario.jpg');"></button>
+        <button class="image-button" onclick="startGame('set2')" style="background-image: url('mushroom.jpg');"></button>
+        <button class="image-button" onclick="startGame('set3')" style="background-image: url('pacman.jpg');"></button>
+        <button class="image-button" onclick="startGame('set4')" style="background-image: url('ghost.jpg');"></button>
+    </div>
+
+    <script>
+        // Function to start the game with selected image set
+        function startGame(set) {
+            window.location.href = `puzzle.html?set=${set}`;
+        }
+    </script>
+</body>
 </html>
+
+
