@@ -31,7 +31,7 @@ Clone the repository using the following command:
 ```bash
 git clone https://github.com/yourusername/8-puzzle-game-solver.git
 cd 8-puzzle-game-solver
-
+```
 
 ## Usage
 1. Open `index.html` in a web browser.
@@ -60,6 +60,3 @@ The BFS algorithm works by systematically exploring each possible tile configura
 - **JavaScript**: Core functionality, including game logic and BFS for solving the puzzle.
 - **JSON**: Used for converting the board configuration to a string format to enable unique comparisons in the BFS algorithm.
 
-## License
-This project is open-source and available under the MIT License.
-```
